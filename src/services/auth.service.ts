@@ -4,7 +4,6 @@ import { User } from "../models/user.model";
 import { AppError } from "../utils/error.util";
 import { generateVerificationToken } from "../utils/crypto.util";
 import { sendEmail } from "../utils/email.util";
-import { ENV } from "../config/env";
 import { generateAccessToken, generateRefreshToken } from "../utils/token.util";
 
 export const registerUser = async (data: {

@@ -1,11 +1,16 @@
 import { Request, Response } from "express";
 import {
+  acceptInvite,
   addMemberToOrganization,
   createOrganization,
+  declineInvite,
   deleteOrganization,
   getMyOrganizations,
   getOrganizationById,
   getOrganizationMembers,
+  inviteMember,
+  removeMemberFromOrganization,
+  updateMemberRole,
   updateOrganization,
 } from "../services/organization.service";
 import { asyncHandler } from "../utils/common.util";
@@ -130,6 +135,100 @@ export const getOrganizationMembersController = asyncHandler(
     res.status(200).json({
       success: true,
       ...result,
+    });
+  },
+);
+
+export const updateMemberRoleController = asyncHandler(
+  async (req: Request<OrgParams>, res: Response) => {
+    const { orgId } = req.params;
+    const { userId, role } = req.body;
+    const requester = (req as any).user;
+
+    const result = await updateMemberRole(
+      orgId,
+      userId,
+      requester._id.toString(),
+      role,
+    );
+
+    res.status(200).json({
+      success: true,
+      message: result.message,
+    });
+  },
+);
+
+export const removeMemberController = asyncHandler(
+  async (req: Request<OrgParams>, res: Response) => {
+    const { orgId } = req.params;
+    const { userId } = req.body;
+    const requester = (req as any).user;
+
+    const result = await removeMemberFromOrganization(
+      orgId,
+      userId,
+      requester._id.toString(),
+    );
+
+    res.status(200).json({
+      success: true,
+      message: result.message,
+    });
+  },
+);
+
+export const inviteMemberController = asyncHandler(
+  async (req: Request<OrgParams>, res: Response) => {
+    const { orgId } = req.params;
+    const { email, role } = req.body;
+    const requester = (req as any).user;
+
+    const result = await inviteMember(
+      orgId,
+      requester._id.toString(),
+      email,
+      role,
+    );
+
+    res.status(200).json({
+      success: true,
+      message: result.message,
+    });
+  },
+);
+
+export const acceptInviteController = asyncHandler(
+  async (req: Request<OrgParams>, res: Response) => {
+    const { orgId } = req.params;
+    const { token } = req.body;
+    const user = (req as any).user;
+
+    const result = await acceptInvite(
+      orgId,
+      token,
+      user._id.toString(),
+      user.email,
+    );
+
+    res.status(200).json({
+      success: true,
+      message: result.message,
+    });
+  },
+);
+
+export const declineInviteController = asyncHandler(
+  async (req: Request<OrgParams>, res: Response) => {
+    const { orgId } = req.params;
+    const { token } = req.body;
+    const user = (req as any).user;
+
+    const result = await declineInvite(orgId, token, user.email);
+
+    res.status(200).json({
+      success: true,
+      message: result.message,
     });
   },
 );

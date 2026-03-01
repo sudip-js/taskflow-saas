@@ -1,0 +1,16 @@
+POST /organizations
+POST /organizations
+GET /organizations/:orgId
+PATCH /organizations/:orgId
+DELETE /organizations/:orgId
+GET /organizations/:orgId/members
+PATCH /organizations/:orgId/members
+DELETE /organizations/:orgId/members
+POST /organizations/:orgId/invite
+POST /organizations/:orgId/invite/accept
+POST /organizations/:orgId/invite/decline
+POST /organizations/:orgId/invite/resend
+POST /organizations/:orgId/invite/revoke
+GET /organizations/:orgId/analytics
+POST /organizations/:orgId/transfer-ownership
+PATCH /organizations/:orgId/settings
