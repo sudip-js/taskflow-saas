@@ -39,19 +39,19 @@ export const registerUser = async (data: {
     });
 
     // ✅ Create verification link
-    const verificationURL = `${ENV.CLIENT_URL}/verify-email?token=${rawToken}`;
+    // const verificationURL = `${ENV.CLIENT_URL}/verify-email?token=${rawToken}`;
 
     // ✅ Send email
-    await sendEmail(
-      user.email,
-      "Verify Your Taskflow Account",
-      `
-        <h2>Welcome to Taskflow</h2>
-        <p>Please verify your email by clicking below:</p>
-        <a href="${verificationURL}">Verify Email</a>
-        <p>This link expires in 10 minutes.</p>
-      `,
-    );
+    // await sendEmail(
+    //   user.email,
+    //   "Verify Your Taskflow Account",
+    //   `
+    //     <h2>Welcome to Taskflow</h2>
+    //     <p>Please verify your email by clicking below:</p>
+    //     <a href="${verificationURL}">Verify Email</a>
+    //     <p>This link expires in 10 minutes.</p>
+    //   `,
+    // );
 
     return {
       success: true,
@@ -106,10 +106,10 @@ export const loginUser = async (email: string, password: string) => {
     throw new AppError("Invalid credentials", 401);
   }
 
-  // Check if verified
-  if (!user.isVerified) {
-    throw new AppError("Please verify your email before login", 403);
-  }
+  // Check if verified (by-passed for now)
+  // if (!user.isVerified) {
+  //   throw new AppError("Please verify your email before login", 403);
+  // }
 
   // Compare password
   const isMatch = await user.comparePassword(password);

@@ -1,9 +1,11 @@
 import { Request, Response } from "express";
 import {
+  addMemberToOrganization,
   createOrganization,
   deleteOrganization,
   getMyOrganizations,
   getOrganizationById,
+  getOrganizationMembers,
   updateOrganization,
 } from "../services/organization.service";
 import { asyncHandler } from "../utils/common.util";
@@ -86,6 +88,48 @@ export const deleteOrganizationController = asyncHandler(
     res.status(200).json({
       success: true,
       message: result.message,
+    });
+  },
+);
+
+// Org Members
+
+export const addMemberController = asyncHandler(
+  async (req: Request<OrgParams>, res: Response) => {
+    const { orgId } = req.params;
+    const { userId, role } = req.body;
+
+    const result = await addMemberToOrganization(orgId, userId, role);
+
+    res.status(200).json({
+      success: true,
+      message: result.message,
+    });
+  },
+);
+
+export const getOrganizationMembersController = asyncHandler(
+  async (req: Request<OrgParams>, res: Response) => {
+    const { orgId } = req.params;
+    const user = (req as any).user;
+
+    const page = Number(req.query.page) || 1;
+    const limit = Number(req.query.limit) || 10;
+    const search = req.query.search as string;
+    const role = req.query.role as "owner" | "admin" | "member";
+
+    const result = await getOrganizationMembers({
+      orgId,
+      userId: user._id.toString(),
+      page,
+      limit,
+      search,
+      role,
+    });
+
+    res.status(200).json({
+      success: true,
+      ...result,
     });
   },
 );

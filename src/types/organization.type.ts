@@ -10,3 +10,12 @@ export interface GetOrgOptions {
 export interface OrgParams {
   orgId: string;
 }
+
+export interface GetMembersOptions {
+  orgId: string;
+  userId: string;
+  page?: number;
+  limit?: number;
+  search?: string;
+  role?: "owner" | "admin" | "member";
+}

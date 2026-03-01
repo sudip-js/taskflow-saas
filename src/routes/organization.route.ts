@@ -1,15 +1,20 @@
 import { Router } from "express";
 import { protect } from "../middlewares/protect.middleware";
+import { validate } from "../middlewares/validate.middleware";
+import { orgAccess } from "../middlewares/orgAccess.middleware";
 import {
+  addMemberSchema,
+  upsertOrganizationSchema,
+} from "../validations/organization.validation";
+import {
+  addMemberController,
   createOrganizationController,
   deleteOrganizationController,
   getMyOrganizationsController,
   getOrganizationByIdController,
+  getOrganizationMembersController,
   updateOrganizationController,
 } from "../controllers/organization.controller";
-import { upsertOrganizationSchema } from "../validations/organization.validation";
-import { validate } from "../middlewares/validate.middleware";
-import { orgAccess } from "../middlewares/orgAccess.middleware";
 
 const router = Router();
 
@@ -24,9 +29,9 @@ router.get("/:orgId", protect, getOrganizationByIdController);
 
 router.patch(
   "/:orgId",
-  validate(upsertOrganizationSchema),
   protect,
   orgAccess(["owner", "admin"]),
+  validate(upsertOrganizationSchema),
   updateOrganizationController,
 );
 
@@ -36,5 +41,16 @@ router.delete(
   orgAccess(["owner"]),
   deleteOrganizationController,
 );
+
+// Org Member
+router.post(
+  "/:orgId/members",
+  protect,
+  orgAccess(["owner", "admin"]),
+  validate(addMemberSchema),
+  addMemberController,
+);
+
+router.get("/:orgId/members", protect, getOrganizationMembersController);
 
 export default router;
