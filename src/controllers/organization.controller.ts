@@ -1,10 +1,13 @@
 import { Request, Response } from "express";
 import {
   createOrganization,
+  deleteOrganization,
   getMyOrganizations,
   getOrganizationById,
+  updateOrganization,
 } from "../services/organization.service";
 import { asyncHandler } from "../utils/common.util";
+import { OrgParams } from "../types/organization.type";
 
 export const createOrganizationController = asyncHandler(
   async (req: Request, res: Response) => {
@@ -48,14 +51,41 @@ export const getMyOrganizationsController = asyncHandler(
 );
 
 export const getOrganizationByIdController = asyncHandler(
-  async (req: Request, res: Response) => {
+  async (req: Request<OrgParams>, res: Response) => {
     const user = (req as any).user;
-    const orgId = req.params.orgId as string;
+    const { orgId } = req.params;
     const result = await getOrganizationById(orgId, user._id.toString());
 
     res.status(200).json({
       success: true,
       ...result,
+    });
+  },
+);
+
+export const updateOrganizationController = asyncHandler(
+  async (req: Request<OrgParams>, res: Response) => {
+    const { orgId } = req.params;
+    const { name } = req.body;
+
+    const updatedOrg = await updateOrganization(orgId, name);
+
+    res.status(200).json({
+      success: true,
+      organization: updatedOrg,
+    });
+  },
+);
+
+export const deleteOrganizationController = asyncHandler(
+  async (req: Request<OrgParams>, res: Response) => {
+    const { orgId } = req.params;
+
+    const result = await deleteOrganization(orgId);
+
+    res.status(200).json({
+      success: true,
+      message: result.message,
     });
   },
 );

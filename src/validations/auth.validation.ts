@@ -57,3 +57,13 @@ export const resetPasswordSchema = z.object({
     .min(8, "Password must be at least 8 characters long")
     .max(32, "Password must be at most 32 characters long"),
 });
+
+export const resendVerificationEmailSchema = z.object({
+  email: z
+    .string()
+    .trim()
+    .toLowerCase()
+    .nonempty("Email is required")
+    .email("Invalid email")
+    .max(32, "Email must be at most 32 characters long"),
+});

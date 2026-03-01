@@ -5,6 +5,8 @@ import {
   logoutUser,
   refreshUserToken,
   registerUser,
+  resendResetPasswordEmail,
+  resendVerificationEmail,
   resetPassword,
   verifyEmail,
 } from "../services/auth.service";
@@ -123,6 +125,34 @@ export const resetPasswordController = asyncHandler(
     const { token, password } = req.body;
 
     const result = await resetPassword(token, password);
+
+    res.status(200).json({
+      success: true,
+      message: result.message,
+    });
+  },
+);
+
+export const resendVerificationEmailController = asyncHandler(
+  async (req: Request, res: Response) => {
+    const { email } = req.body;
+    console.log({ email });
+
+    const result = await resendVerificationEmail(email);
+
+    res.status(200).json({
+      success: true,
+      message: result.message,
+    });
+  },
+);
+
+export const resendResetPasswordEmailController = asyncHandler(
+  async (req: Request, res: Response) => {
+    const { email } = req.body;
+    console.log({ email });
+
+    const result = await resendResetPasswordEmail(email);
 
     res.status(200).json({
       success: true,

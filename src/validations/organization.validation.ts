@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const createOrganizationSchema = z.object({
+export const upsertOrganizationSchema = z.object({
   name: z
     .string()
     .nonempty("Organization name is required")

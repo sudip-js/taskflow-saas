@@ -6,3 +6,7 @@ export interface GetOrgOptions {
   sortBy?: string;
   order?: "asc" | "desc";
 }
+
+export interface OrgParams {
+  orgId: string;
+}

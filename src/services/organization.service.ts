@@ -100,3 +100,28 @@ export const getOrganizationById = async (orgId: string, userId: string) => {
     userRole,
   };
 };
+
+export const updateOrganization = async (orgId: string, name: string) => {
+  const organization = await Organization.findById(orgId);
+
+  if (!organization) {
+    throw new AppError("Organization not found", 404);
+  }
+
+  organization.name = name;
+  await organization.save();
+
+  return organization;
+};
+
+export const deleteOrganization = async (orgId: string) => {
+  const org = await Organization.findById(orgId);
+
+  if (!org) {
+    throw new AppError("Organization not found", 404);
+  }
+
+  await org.deleteOne();
+
+  return { message: "Organization deleted successfully" };
+};
